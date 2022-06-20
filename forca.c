@@ -16,14 +16,6 @@ char *initializeSecretArray(int qtd) {
     return r;
 }
 
-void renderLetters(char *secretWord) {
-    printf("\n");
-    for (int cont = 0; cont < strlen(secretWord); cont++) {
-        printf("%c ", secretWord[cont]);
-    }
-    printf("\n");
-}
-
 int verifyLetterInWord(
     char actualLetter,
     char *word,
