@@ -4,19 +4,17 @@
 #include <unistd.h>
 
 char *initializeSecretArray(int qtd) {
-    static char r[32];
-    int i;
+    static char secret[32];
 
-    for (i = 0; i < qtd; ++i) {
-        r[i] = '_';
+    for (int cont = 0; cont < qtd; ++cont) {
+        secret[cont] = '_';
     }
+    secret[qtd+1] = '\0';
 
-    r[qtd+1] = '\0';
-
-    return r;
+    return secret;
 }
 
-int verifyLetterInWord(
+int isLetterInWord(
     char actualLetter,
     char *word,
     char *secretWord
@@ -30,7 +28,25 @@ int verifyLetterInWord(
         }
     }
 
-    if(isInLetter) {
+    if(!isInLetter) {
+        return 0;
+    }
+
+    return 1;
+}
+
+int isFinished(
+    char *secret
+){
+    int totalHits = 0;
+
+    for(int cont = 0; cont <= strlen(secret); cont++) {
+        if(secret[cont] != '_') {
+            totalHits++;
+        }
+    }
+
+    if(totalHits-1 == strlen(secret)) {
         return 1;
     }
 
@@ -52,24 +68,33 @@ int main() {
     int acertou;
 
     while (qtdTry <= maxTry) {
-        printf("Erros %i de %i.\n", qtdTry, maxTry);
+        printf("\n--------------");
+        printf("\nErros %i de %i.\n\n", qtdTry, maxTry);
+        printf("\n\n");
 
-        printf(" Letra > ");
-        scanf("%c", &actualLetter);
+        printf("\n%s\n", secretWord);
+        printf("Letra > ");
+        scanf(" %c", &actualLetter);
         printf("\n");
 
-        acertou = verifyLetterInWord(
+        acertou = isLetterInWord(
             actualLetter,
             word,
             secretWord
         );
-        printf("Acertou: %i\n", acertou);
 
+        char text[32];
+        sprintf(text, "Acertou a letra");
         if (acertou == 0) {
             qtdTry++;
+            sprintf(text, "Errou a letra");
         }
 
-        printf("%s", secretWord);
+        if(isFinished(secretWord)) {
+            printf("Parábens, o Jogador ganhou! A palavra era %s\n", secretWord);
+            break;
+        }
+        printf("\n%s", text);
     }
 
     return 0;
